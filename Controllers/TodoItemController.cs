@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Todo_Application.Data;
 using Todo_Application.Model;
 
@@ -17,19 +18,52 @@ namespace Todo_Application.Controllers
         }
 
         [HttpPost]
-        [Route("save-todo-item")]
+        [Route("save-todo-item")]      // create todo items 
         public async Task<IActionResult> CreateTodoItems ([FromBody] TodoItems todoItems)
         {
             try
             {
                 _context.TodoItems.Add(todoItems);
-                _context.SaveChanges();
+               await _context.SaveChangesAsync();
                 return Ok(todoItems);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("get-all-available-todo-items")]
+        public async Task<IActionResult> GetAllTodo()       // get All available-todo-items
+        {
+            
+                var todo = await _context.TodoItems.Where(todo => todo.IsAvailable).ToListAsync();
+                return Ok(todo);
+            
+           
+        }
+
+        [HttpGet]
+        [Route("get-all-available-todo-items-orderby-title")]
+        public async Task<IActionResult> GetAllTodoOrderByTitel()       // get All available-todo-items-orderByTitle
+        {
+
+            var todo = await _context.TodoItems.Where(todo => todo.IsAvailable).OrderBy(todo => todo.Title).ToListAsync();
+            return Ok(todo);
+
+
+        }
+
+        [HttpGet]
+        [Route("get-all-unavailable-todo-items")]
+        public async Task<IActionResult> GetAllTodoUnAvailable()       // get All available-todo-items
+        {
+
+            var todo = await _context.TodoItems.Where(todo => todo.IsAvailable==false).ToListAsync();
+            return Ok(todo);
+
+
         }
     }
 }

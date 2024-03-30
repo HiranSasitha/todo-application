@@ -1,6 +1,36 @@
 [
   {
     "ContainingType": "Todo_Application.Controllers.TodoItemController",
+    "Method": "GetAllTodo",
+    "RelativePath": "api/TodoItem/get-all-available-todo-items",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Todo_Application.Controllers.TodoItemController",
+    "Method": "GetAllTodoOrderByTitel",
+    "RelativePath": "api/TodoItem/get-all-available-todo-items-orderby-title",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Todo_Application.Controllers.TodoItemController",
+    "Method": "GetAllTodoUnAvailable",
+    "RelativePath": "api/TodoItem/get-all-unavailable-todo-items",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Todo_Application.Controllers.TodoItemController",
     "Method": "CreateTodoItems",
     "RelativePath": "api/TodoItem/save-todo-item",
     "HttpMethod": "POST",
