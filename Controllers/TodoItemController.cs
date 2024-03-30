@@ -85,13 +85,49 @@ namespace Todo_Application.Controllers
         [HttpGet]
         [Route("get-todo-item-by-id/{id}")]
 
-        public async Task<IActionResult> GetTodoById(int id)       // get -todo-items-by-id
+        public async Task<IActionResult> GetTodoById(int id)       // get-todo-items-by-id
         {
             try
             {
 
                 var todo = await _context.TodoItems.FirstOrDefaultAsync(todo => todo.Id==id);
                 return Ok(todo);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPut]
+        [Route("update-todo-item/{id}")]
+
+        public async Task<IActionResult> UpdateTodoItem(int id, [FromBody] TodoItems todoItems)       // update-todo-item
+        {
+            try
+            {
+
+                var todo = await _context.TodoItems.FirstOrDefaultAsync(todo => todo.Id == id);
+
+                if (todo != null) { 
+
+                    todo.IsAvailable = todoItems.IsAvailable;
+                    todo.Title = todoItems.Title;
+                    todo.Description = todoItems.Description;
+                    todo.CreateDate = DateTime.Now;
+
+
+                    _context.TodoItems.Update(todo);
+                    await _context.SaveChangesAsync();
+                    return Ok(todo);
+
+                }
+                else
+                {
+                    throw new Exception("Invalid id.");
+                }
+                
             }
             catch (Exception ex)
             {
