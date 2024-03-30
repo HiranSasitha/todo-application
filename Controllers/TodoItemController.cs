@@ -90,7 +90,7 @@ namespace Todo_Application.Controllers
             try
             {
 
-                var todo = await _context.TodoItems.FirstOrDefaultAsync(todo => todo.Id==id);
+                var todo = _context.TodoItems.Find(id);
                 return Ok(todo);
             }
             catch (Exception ex)
@@ -128,6 +128,35 @@ namespace Todo_Application.Controllers
                     throw new Exception("Invalid id.");
                 }
                 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpDelete]
+        [Route("delete-todo-{id}")]
+
+        public async Task<IActionResult> DeleteTodo(int id)       // delete-todo
+        {
+            try
+            {
+
+                var todo = _context.TodoItems.Find(id);
+               
+                if (todo != null)
+                {
+                    _context.TodoItems.Remove(todo);
+                    _context.SaveChanges();
+                    return Ok(todo);
+                }
+                else
+                {
+                    throw new Exception("Invalid id.");
+                }
+              
             }
             catch (Exception ex)
             {
