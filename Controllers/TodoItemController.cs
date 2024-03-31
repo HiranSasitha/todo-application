@@ -165,6 +165,22 @@ namespace Todo_Application.Controllers
 
         }
 
+        [HttpGet]
+        [Route("get-all-unavailable-todo-items-orderby-title")]
+        public async Task<IActionResult> GetAllUnavailableTodoOrderByTitel()       // get All unavailable-todo-items-orderByTitle
+        {
+            try
+            {
+                var todo = await _context.TodoItems.Where(todo => todo.IsAvailable==false).OrderBy(todo => todo.Title).ToListAsync();
+                return Ok(todo);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
 
     }
 }
