@@ -135,6 +135,41 @@ namespace Todo_Application.Controllers
             }
 
         }
+        [HttpPut]
+        [Route("update-todo-item-completed/{id}")]
+
+        public async Task<IActionResult> UpdateTodoItemToCompleted(int id)       // update-todo-item-completed
+        {
+            try
+            {
+
+                var todo = await _context.TodoItems.FirstOrDefaultAsync(todo => todo.Id == id);
+
+                if (todo != null)
+                {
+
+                    todo.IsAvailable = true;
+                   
+                    todo.CreateDate = DateTime.Now;
+
+
+                    _context.TodoItems.Update(todo);
+                    await _context.SaveChangesAsync();
+                    return Ok(todo);
+
+                }
+                else
+                {
+                    throw new Exception("Invalid id.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
 
         [HttpDelete]
         [Route("delete-todo-{id}")]
