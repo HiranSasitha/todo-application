@@ -112,7 +112,7 @@ namespace Todo_Application.Controllers
 
                 if (todo != null) { 
 
-                    todo.IsAvailable = todoItems.IsAvailable;
+                    
                     todo.Title = todoItems.Title;
                     todo.Description = todoItems.Description;
                     todo.CreateDate = DateTime.Now;
@@ -150,6 +150,41 @@ namespace Todo_Application.Controllers
 
                     todo.IsAvailable = true;
                    
+                    todo.CreateDate = DateTime.Now;
+
+
+                    _context.TodoItems.Update(todo);
+                    await _context.SaveChangesAsync();
+                    return Ok(todo);
+
+                }
+                else
+                {
+                    throw new Exception("Invalid id.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpPut]
+        [Route("update-todo-item-activate/{id}")]
+
+        public async Task<IActionResult> UpdateTodoItemToActive(int id)       // update-todo-item-completed
+        {
+            try
+            {
+
+                var todo = await _context.TodoItems.FirstOrDefaultAsync(todo => todo.Id == id);
+
+                if (todo != null)
+                {
+
+                    todo.IsAvailable = false;
+
                     todo.CreateDate = DateTime.Now;
 
 
