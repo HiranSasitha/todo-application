@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Todo_Application.Data;
+using Todo_Application.dto;
 using Todo_Application.Model;
 
 namespace Todo_Application.Controllers
@@ -53,6 +58,52 @@ namespace Todo_Application.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        // POST: api/Auth/login
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login(LoginDto loginDto)
+        {
+            var user = await _context.User.FirstOrDefaultAsync(u => u.UserName == loginDto.UserName);
+
+            if (user != null)
+            {
+                if (BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+                    { 
+                    var jwt = GenerateJwtToken(user);
+                    return Ok(jwt);
+                
+                }
+                else
+                {
+                    return Unauthorized("Invalid password.");
+                }
+
+            }
+
+            return Unauthorized("Invalid username.");
+            
+          
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_jwtSecret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName),
+                     new Claim(ClaimTypes.Email, user.Email)
+                }),
+                IssuedAt = DateTime.UtcNow,
+                Expires = DateTime.UtcNow.AddDays(1), // Token expiry time
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature) //Hs256
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
 
