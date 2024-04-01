@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Todo_Application.Data;
@@ -8,6 +9,7 @@ namespace Todo_Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TodoItemController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -17,6 +19,8 @@ namespace Todo_Application.Controllers
             _context = context;
         }
 
+
+        // POST: api/TodoItem/save-todo-item
         [HttpPost]
         [Route("save-todo-item")]      // create todo items 
         public async Task<IActionResult> CreateTodoItems ([FromBody] TodoItems todoItems)
@@ -33,6 +37,7 @@ namespace Todo_Application.Controllers
             }
         }
 
+        // GET: api/TodoItem/get-all-available-todo-items
         [HttpGet]
         [Route("get-all-available-todo-items")]
         public async Task<IActionResult> GetAllTodo()       // get All available-todo-items
@@ -49,6 +54,7 @@ namespace Todo_Application.Controllers
 
         }
 
+        // GET: api/TodoItem/get-all-available-todo-items-orderby-title
         [HttpGet]
         [Route("get-all-available-todo-items-orderby-title")]
         public async Task<IActionResult> GetAllTodoOrderByTitel()       // get All available-todo-items-orderByTitle
@@ -65,6 +71,7 @@ namespace Todo_Application.Controllers
 
         }
 
+        // GET: api/TodoItem/get-all-unavailable-todo-items
         [HttpGet]
         [Route("get-all-unavailable-todo-items")]
         public async Task<IActionResult> GetAllTodoUnAvailable()       // get All unavailable-todo-items
@@ -82,6 +89,8 @@ namespace Todo_Application.Controllers
 
         }
 
+
+        // GET: api/TodoItem/get-todo-item-by-id
         [HttpGet]
         [Route("get-todo-item-by-id/{id}")]
 
@@ -100,6 +109,7 @@ namespace Todo_Application.Controllers
 
         }
 
+        // PUT: api/TodoItem/update-todo-item/{id}
         [HttpPut]
         [Route("update-todo-item/{id}")]
 
@@ -135,6 +145,8 @@ namespace Todo_Application.Controllers
             }
 
         }
+
+        // PUT: api/TodoItem/update-todo-item-completed/{id}
         [HttpPut]
         [Route("update-todo-item-completed/{id}")]
 
@@ -170,6 +182,8 @@ namespace Todo_Application.Controllers
             }
 
         }
+
+        // PUT: api/TodoItem/update-todo-item-activate/{id}
         [HttpPut]
         [Route("update-todo-item-activate/{id}")]
 
@@ -206,6 +220,7 @@ namespace Todo_Application.Controllers
 
         }
 
+        // DELETE: api/TodoItem/delete-todo-{id}
         [HttpDelete]
         [Route("delete-todo-{id}")]
 
@@ -235,6 +250,7 @@ namespace Todo_Application.Controllers
 
         }
 
+        // DELETE: api/TodoItem/get-all-unavailable-todo-items-orderby-title
         [HttpGet]
         [Route("get-all-unavailable-todo-items-orderby-title")]
         public async Task<IActionResult> GetAllUnavailableTodoOrderByTitel()       // get All unavailable-todo-items-orderByTitle

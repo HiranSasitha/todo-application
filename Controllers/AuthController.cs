@@ -18,7 +18,7 @@ namespace Todo_Application.Controllers
         private readonly AppDbContext _context;
         private readonly string _jwtSecret;
 
-        public AuthController(AppDbContext context,IConfiguration configuration )
+        public AuthController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
             _jwtSecret = configuration.GetValue<String>("JwtSecret");  // get jwtSecret by json file
@@ -69,10 +69,10 @@ namespace Todo_Application.Controllers
             if (user != null)
             {
                 if (BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
-                    { 
+                {
                     var jwt = GenerateJwtToken(user);
                     return Ok(jwt);
-                
+
                 }
                 else
                 {
@@ -82,8 +82,8 @@ namespace Todo_Application.Controllers
             }
 
             return Unauthorized("Invalid username.");
-            
-          
+
+
         }
 
         private string GenerateJwtToken(User user)
