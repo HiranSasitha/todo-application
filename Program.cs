@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using System;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Todo_Application.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,27 @@ builder.Services.AddDbContext<AppDbContext>(Options =>
 {
     Options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 
+});
+
+// JWT auth configuration
+var jwtSecret = builder.Configuration["JwtSecret"];
+var key = Encoding.ASCII.GetBytes(jwtSecret);
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateLifetime = true,
+        ValidateAudience = false
+    };
 });
 
 builder.Services.AddCors(options =>
